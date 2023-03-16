@@ -1,0 +1,36 @@
+---
+- name: Check if Docker is installed and install if necessary
+  hosts: all
+  become: yes
+
+  tasks:
+    - name: Check if Docker is installed
+      stat:
+        path: /usr/bin/docker
+      register: docker_bin
+
+    - name: Install Docker if necessary
+      apt:
+        name:
+          - apt-transport-https
+          - ca-certificates
+          - curl
+          - gnupg
+          - lsb-release
+        state: present
+
+    - name: Add Docker GPG key
+      apt_key:
+        url: https://download.docker.com/linux/ubuntu/gpg
+        state: present
+
+    - name: Add Docker APT repository
+      apt_repository:
+        repo: deb [arch=amd64] https://download.docker.com/linux/ubuntu {{ ansible_lsb.codename }} stable
+        state: present
+
+    - name: Install latest Docker CE
+      apt:
+        name: docker-ce
+        state: latest
+      when: docker_bin.stat.exists == false
