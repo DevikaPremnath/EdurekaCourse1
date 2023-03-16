@@ -10,6 +10,7 @@
       register: docker_bin
 
     - name: Install Docker if necessary
+      when: docker_bin.stat.exists == false
       apt:
         name:
           - apt-transport-https
@@ -23,12 +24,14 @@
       apt_key:
         url: https://download.docker.com/linux/ubuntu/gpg
         state: present
+      when: docker_bin.stat.exists == false
 
     - name: Add Docker APT repository
       apt_repository:
         # repo: deb [arch=amd64] https://download.docker.com/linux/ubuntu {{ ansible_lsb.codename }} stable
         repo: deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.gpg] https://download.docker.com/linux/ubuntu bionic stable
         state: present
+      when: docker_bin.stat.exists == false
 
     - name: Install latest Docker CE
       apt:
