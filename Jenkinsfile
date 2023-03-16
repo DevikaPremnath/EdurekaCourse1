@@ -26,7 +26,7 @@ pipeline {
         stage('Install Docker on slave via Ansible') {
             agent{ label 'master'}
             steps {
-                sh "ansible-playbook docker-install.yml"
+                sh "ansible-playbook docker-install.yml -u edureka"
             }
         }
 
