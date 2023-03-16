@@ -4,6 +4,7 @@ pipeline {
         
         stage('install puppet on slave') {
             steps {
+		deleteDir()
                 // Install Puppet
                 echo 'Install Puppet'
                 sh "wget -N -O 'puppet.deb' https://apt.puppetlabs.com/puppet6-release-bionic.deb"
